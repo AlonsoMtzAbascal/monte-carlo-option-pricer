@@ -1,12 +1,12 @@
 # Monte Carlo Option Pricing Engine
 
 A small, **validated** library for pricing options under the Black–Scholes model
-by Monte Carlo simulation — built to demonstrate not just that the numbers come
+by Monte Carlo simulation. It is built to demonstrate not just that the numbers come
 out right, but that every estimate is checked against known truth, quoted with
 an error bar, and made faster with variance-reduction techniques.
 
-The guiding principle is simple: **a Monte Carlo estimate you cannot check and
-cannot put an error bar on is a Monte Carlo estimate you cannot trust.** So
+The guiding principle is that a Monte Carlo estimate you cannot check and
+cannot put an error bar on is a Monte Carlo estimate you cannot trust. So
 every simulated price in this project is validated against a closed form
 wherever one exists, and reported with its standard error and a 95% confidence
 interval.
@@ -33,8 +33,8 @@ reproducible from a fixed seed.
 
 European call prices from crude Monte Carlo lie on top of the analytic
 Black–Scholes curve across all strikes. The lower panel shows the error in
-units of the Monte Carlo standard error (a z-score): **97% of points fall
-within ±1.96**, exactly what an unbiased estimator should produce — the
+units of the Monte Carlo standard error (a z-score). **97% of points fall
+within ±1.96**, exactly what an unbiased estimator should produce. The
 remaining discrepancy is pure sampling noise, not bias.
 
 ![Validation](figures/01_validation.png)
@@ -51,7 +51,7 @@ Vega   closed form = 37.524   pathwise = 37.475 ± 0.120
 ### 2. Convergence and the `1/√N` law
 
 The estimate homes in on the exact price as the number of paths grows (left),
-and the standard error decays as `1/√N` — on log-log axes the observed errors
+and the standard error decays as `1/√N`. On log-log axes the observed errors
 lie on a straight line of slope **−0.503**, matching the theoretical −0.5
 (right).
 
@@ -59,10 +59,10 @@ lie on a straight line of slope **−0.503**, matching the theoretical −0.5
 
 ### 3. How much does variance reduction help?
 
-Measured honestly, by running each estimator over **500 independent
+Measured by running each estimator over **500 independent
 replications** at a fixed 20,000 paths and comparing the empirical spread of
-the estimates. The variance reduction factor (VRF) is the ratio of variances —
-a VRF of 10 means you would need 10× as many crude paths to match the accuracy.
+the estimates. The variance reduction factor (VRF) is the ratio of variances.
+A VRF of 10 means you would need 10× as many crude paths to match the accuracy.
 
 | Method | Std of estimate | Bias | Variance reduction |
 |--------|-----------------|------|--------------------|
@@ -75,7 +75,7 @@ a VRF of 10 means you would need 10× as many crude paths to match the accuracy.
 ### 4. Options with no closed form
 
 This is where Monte Carlo is indispensable. The **arithmetic-average Asian
-call** has no closed-form price, but the **geometric** Asian does — so the
+call** has no closed-form price, but the **geometric** Asian does, so the
 geometric case is used *both* to validate the path simulator and as a control
 variate for the arithmetic case (the Kemna–Vorst technique). Because the two
 averages are ~0.9999 correlated, the control variate is extraordinary:
@@ -108,7 +108,7 @@ $$S_T = S_0 \exp\!\big[(r - \tfrac12\sigma^2)T + \sigma\sqrt{T}\,Z\big], \quad Z
 An option price is the discounted expected payoff under this measure,
 `price = e^{-rT} · E[payoff]`, which Monte Carlo estimates by averaging the
 payoff over many simulated draws. European payoffs need only `S_T` (sampled
-exactly, with no discretisation error); path-dependent payoffs need the whole
+exactly, with no discretisation error). Path-dependent payoffs need the whole
 trajectory, sampled step by step with the exact log-normal transition.
 
 ---
@@ -198,7 +198,6 @@ confidence intervals:
 ---
 
 ## References
-
 - Glasserman, *Monte Carlo Methods in Financial Engineering* (2003) — the
   standard reference for the variance-reduction techniques used here.
 - Kemna & Vorst (1990), "A pricing method for options based on average asset
