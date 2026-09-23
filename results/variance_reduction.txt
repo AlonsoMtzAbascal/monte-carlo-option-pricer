@@ -1,0 +1,6 @@
+Exact price: 10.4506    (N = 20,000 paths, 500 replications)
+--------------------------------------------------------------------
+method                  mean    std of est      bias     VRF
+Crude                10.4532       0.10590   0.00260     1.0
+Antithetic           10.4484       0.07530  -0.00214     2.0
+Control variate      10.4494       0.04075  -0.00122     6.8

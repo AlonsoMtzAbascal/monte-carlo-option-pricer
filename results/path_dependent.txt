@@ -1,0 +1,17 @@
+Path-dependent pricing (N = 100,000, 252 steps)
+================================================================
+
+Geometric Asian call  (closed form exists -> engine validation):
+    closed form : 5.5655
+    Geometric Asian MC           price =   5.5758  SE =  0.0244  95% CI = [  5.5279,   5.6237]  (n=100,000)
+    agree within CI: True
+
+Arithmetic Asian call  (NO closed form -> Monte Carlo required):
+    Arithmetic Asian MC (crude)  price =   5.7632  SE =  0.0252  95% CI = [  5.7138,   5.8126]  (n=100,000)
+    Arithmetic Asian MC (control) price =   5.7824  SE =  0.0007  95% CI = [  5.7810,   5.7838]  (n=100,000)
+    variance reduction factor from control variate: 1302x
+
+Down-and-out barrier call  (barrier = 85):
+    Down-and-out call MC         price =  10.0503  SE =  0.0467  95% CI = [  9.9589,  10.1418]  (n=100,000)
+    vanilla call for reference: 10.4506
+    barrier discount: 0.4002 (knock-out risk makes it cheaper)
