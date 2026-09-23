@@ -1,16 +1,9 @@
-"""Shared configuration for the experiment scripts.
-
-Centralising the market parameters and plot styling keeps every figure and
-table mutually consistent and makes the experiments reproducible: the same
-base case and the same master seed are used throughout.
-"""
 from __future__ import annotations
 
 import os
 
 import matplotlib as mpl
 
-# --- Base market case (used unless an experiment overrides it) ----------------
 BASE = dict(
     S0=100.0,     # spot
     K=100.0,      # strike (at-the-money)
@@ -21,14 +14,12 @@ BASE = dict(
 
 MASTER_SEED = 20240517
 
-# --- Paths --------------------------------------------------------------------
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIG_DIR = os.path.join(ROOT, "figures")
 RESULTS_DIR = os.path.join(ROOT, "results")
 os.makedirs(FIG_DIR, exist_ok=True)
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
-# --- Plot style ---------------------------------------------------------------
 NAVY = "#1f3b57"
 TEAL = "#2a9d8f"
 AMBER = "#e9a13b"
