@@ -1,19 +1,3 @@
-"""
-Experiment 2 -- Convergence and the 1/sqrt(N) law.
-
-Two questions answered:
-  (a) does the estimate converge to the true (Black-Scholes) price as the
-      number of paths grows?
-  (b) does the error shrink at the theoretical Monte Carlo rate of 1/sqrt(N)?
-
-Left panel: the price estimate with its 95% confidence band as N increases,
-against the exact price. The band narrows and the estimate homes in.
-
-Right panel: standard error vs N on log-log axes. Monte Carlo error scales as
-sigma_payoff / sqrt(N), so on log-log axes the points lie on a straight line of
-slope -1/2. We fit the slope and print it -- getting -0.5 back is the
-quantitative confirmation that the estimator behaves as theory predicts.
-"""
 from __future__ import annotations
 
 import numpy as np
@@ -42,7 +26,6 @@ def main():
         ses.append(res.std_error)
     prices, ses = np.array(prices), np.array(ses)
 
-    # Fit the log-log slope of SE vs N.
     slope, intercept = np.polyfit(np.log(Ns), np.log(ses), 1)
     print(f"Exact (Black-Scholes) price: {exact:.4f}")
     print(f"Fitted log-log slope of SE vs N: {slope:.3f} "
@@ -54,7 +37,6 @@ def main():
         for N, pr, se in zip(Ns, prices, ses):
             f.write(f"{int(N)}, {pr:.6f}, {se:.6f}\n")
 
-    # --- figure --------------------------------------------------------------
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.4))
 
     ax1.axhline(exact, color=C.NAVY, lw=2, label=f"Exact = {exact:.3f}")
