@@ -1,30 +1,3 @@
-"""
-Closed-form (analytic) benchmarks under the Black-Scholes model.
-
-These are the "known truth" that the Monte Carlo estimators in `pricer.py`
-are validated against. A Monte Carlo engine you cannot check against an
-exact answer is a Monte Carlo engine you cannot trust, so every simulated
-price in this project is compared to one of the formulas below wherever a
-closed form exists.
-
-Model
------
-Under the risk-neutral measure the underlying follows geometric Brownian
-motion:
-
-    dS_t = r S_t dt + sigma S_t dW_t
-
-so the terminal price is log-normal:
-
-    S_T = S_0 * exp[(r - 0.5 sigma^2) T + sigma sqrt(T) Z],   Z ~ N(0, 1)
-
-Every function takes the same core parameters:
-    S0    : spot price today
-    K     : strike
-    T     : time to maturity (years)
-    r     : risk-free rate (continuously compounded)
-    sigma : volatility (annualised)
-"""
 from __future__ import annotations
 
 import numpy as np
@@ -47,10 +20,6 @@ def _d1_d2(S0: float, K: float, T: float, r: float, sigma: float):
 
 
 def bs_price(S0, K, T, r, sigma, option_type: str = "call"):
-    """Black-Scholes price of a European call or put.
-
-    Works on scalars or NumPy arrays (vectorised over any argument).
-    """
     d1, d2 = _d1_d2(S0, K, T, r, sigma)
     disc = np.exp(-r * T)
     if option_type == "call":
@@ -61,7 +30,6 @@ def bs_price(S0, K, T, r, sigma, option_type: str = "call"):
 
 
 def bs_delta(S0, K, T, r, sigma, option_type: str = "call"):
-    """dPrice/dS0."""
     d1, _ = _d1_d2(S0, K, T, r, sigma)
     if option_type == "call":
         return norm.cdf(d1)
@@ -69,13 +37,11 @@ def bs_delta(S0, K, T, r, sigma, option_type: str = "call"):
 
 
 def bs_vega(S0, K, T, r, sigma):
-    """dPrice/dsigma (identical for calls and puts)."""
     d1, _ = _d1_d2(S0, K, T, r, sigma)
     return S0 * norm.pdf(d1) * np.sqrt(T)
 
 
 def bs_greeks(S0, K, T, r, sigma, option_type: str = "call") -> dict:
-    """Return the standard first-order Greeks plus gamma as a dict."""
     d1, d2 = _d1_d2(S0, K, T, r, sigma)
     disc = np.exp(-r * T)
     gamma = norm.pdf(d1) / (S0 * sigma * np.sqrt(T))
@@ -94,19 +60,7 @@ def bs_greeks(S0, K, T, r, sigma, option_type: str = "call") -> dict:
             "theta": theta, "rho": rho}
 
 
-def geometric_asian_call(S0, K, T, r, sigma, n_steps: int):
-    """Exact price of a *discretely monitored* geometric-average Asian call.
-
-    The geometric average of log-normal prices is itself log-normal, so this
-    option has a closed form even though the (far more common) arithmetic
-    Asian does not. That makes it the perfect ground truth for validating the
-    path-simulation engine, and an excellent control variate for the
-    arithmetic Asian (see `experiments/run_path_dependent.py`).
-
-    Monitoring dates are t_i = i * T / n_steps for i = 1 .. n_steps, matching
-    the grid used by the simulator, so this is exact for that grid (no
-    continuous-monitoring approximation).
-    """
+def geometric_asian_call(S0, K, T, r, sigma, n_steps: int)\:
     n = n_steps
     t = np.arange(1, n + 1) * (T / n)               # monitoring dates
 
