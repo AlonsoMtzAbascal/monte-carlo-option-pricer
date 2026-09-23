@@ -1,23 +1,3 @@
-"""
-Experiment 4 -- Options with no closed form.
-
-This is where Monte Carlo earns its keep. Two path-dependent contracts are
-priced whose payoff depends on the whole trajectory, not just the terminal
-price:
-
-* Arithmetic-average Asian call -- NO closed form exists. We price it two ways:
-  crude Monte Carlo, and a control-variate estimator that uses the geometric
-  Asian (which DOES have a closed form) as the control. Because the two
-  averages are almost perfectly correlated, the control variate is dramatic --
-  this is the Kemna-Vorst technique.
-
-* Down-and-out barrier call -- pays like a call unless the path ever touches a
-  lower barrier, in which case it is worthless.
-
-The geometric Asian is also used to re-validate the path simulator: its Monte
-Carlo price must agree with its closed form, confirming the path engine is
-correct before we trust it on the arithmetic case where no check exists.
-"""
 from __future__ import annotations
 
 import numpy as np
@@ -38,14 +18,12 @@ def main():
     n_steps = 252          # daily monitoring
     n_paths = 100_000
 
-    # --- validate the path engine on the geometric Asian ---------------------
     geo_cf = bs.geometric_asian_call(p["S0"], p["K"], p["T"], p["r"],
                                      p["sigma"], n_steps)
     geo_mc = pricer.price_path_dependent(
         pf.geometric_asian_call_payoff, p["S0"], p["K"], p["T"], p["r"],
         p["sigma"], n_paths, n_steps, rng, method_name="Geometric Asian MC")
 
-    # --- arithmetic Asian: crude vs control variate --------------------------
     arith_crude = pricer.price_path_dependent(
         pf.arithmetic_asian_call, p["S0"], p["K"], p["T"], p["r"], p["sigma"],
         n_paths, n_steps, rng, method_name="Arithmetic Asian MC (crude)")
@@ -53,7 +31,6 @@ def main():
         p["S0"], p["K"], p["T"], p["r"], p["sigma"], n_paths, n_steps, rng)
     asian_vrf = (arith_crude.std_error / arith_ctrl.std_error) ** 2
 
-    # --- barrier option ------------------------------------------------------
     barrier = 85.0
     barrier_mc = pricer.price_path_dependent(
         pf.down_and_out_call, p["S0"], p["K"], p["T"], p["r"], p["sigma"],
@@ -85,7 +62,6 @@ def main():
     with open(f"{C.RESULTS_DIR}/path_dependent.txt", "w") as f:
         f.write(table + "\n")
 
-    # --- figure: sample paths + barrier --------------------------------------
     demo_rng = np.random.default_rng(1)
     from src.simulation import simulate_paths
     demo = simulate_paths(p["S0"], p["T"], p["r"], p["sigma"], 60, n_steps,
