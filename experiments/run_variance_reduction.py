@@ -1,21 +1,3 @@
-"""
-Experiment 3 -- How much does variance reduction help?
-
-Question answered: for a fixed computational budget (same number of paths),
-how much smaller is the estimator's variance when we use antithetic variates
-or control variates instead of crude Monte Carlo?
-
-Measuring this honestly requires more than reading one run's standard-error
-formula: we repeat each estimator over R independent replications at a fixed
-N and look at the *empirical* spread of the price estimates. The variance
-reduction factor (VRF) is then
-
-    VRF = Var(crude estimates) / Var(method estimates)
-
-A VRF of 10 means you would need 10x as many crude paths to match the accuracy
-of the variance-reduced estimator. This replication-based measurement is the
-defensible way to quote a speed-up, so that is what we do.
-"""
 from __future__ import annotations
 
 import numpy as np
@@ -69,7 +51,6 @@ def main():
     with open(f"{C.RESULTS_DIR}/variance_reduction.txt", "w") as f:
         f.write(table + "\n")
 
-    # --- figure --------------------------------------------------------------
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.4))
 
     colors = [C.GREY, C.AMBER, C.TEAL]
