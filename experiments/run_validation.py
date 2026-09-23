@@ -1,18 +1,3 @@
-"""
-Experiment 1 -- Validation against closed form.
-
-Question answered: does the Monte Carlo price agree with Black-Scholes where
-Black-Scholes is exact?
-
-We price European calls across a range of strikes with crude Monte Carlo and
-overlay them on the analytic Black-Scholes curve. The lower panel shows the
-error measured in units of the Monte Carlo standard error (a z-score). If the
-engine is unbiased, roughly 95% of those z-scores fall within +/-1.96 -- i.e.
-the discrepancy is pure sampling noise, not a bug.
-
-As a bonus, the script also validates Monte Carlo Greeks (pathwise and
-finite-difference-with-common-random-numbers) against the closed-form Greeks.
-"""
 from __future__ import annotations
 
 import numpy as np
@@ -50,7 +35,6 @@ def main():
     bs_prices = np.array(bs_prices)
     zscores = np.array(zscores)
 
-    # --- table ---------------------------------------------------------------
     lines = ["Strike     BS price     MC price     MC SE      error/SE (z)"]
     lines.append("-" * 60)
     for K, b, m, se, z in zip(strikes, bs_prices, mc_prices, mc_ses, zscores):
@@ -64,7 +48,6 @@ def main():
     with open(f"{C.RESULTS_DIR}/validation.txt", "w") as f:
         f.write(table + "\n")
 
-    # --- Greeks validation ---------------------------------------------------
     rng = np.random.default_rng(C.MASTER_SEED + 1)
     K = p["K"]
     pw_d, pw_d_se = greeks.pathwise_delta(p["S0"], K, p["T"], p["r"], p["sigma"],
@@ -86,7 +69,6 @@ def main():
     with open(f"{C.RESULTS_DIR}/validation.txt", "a") as f:
         f.write(gtable + "\n")
 
-    # --- figure --------------------------------------------------------------
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6.4),
                                    gridspec_kw={"height_ratios": [3, 1.4]},
                                    sharex=True)
